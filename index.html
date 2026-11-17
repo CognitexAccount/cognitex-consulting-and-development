@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cognitex – Bildung im KI-Zeitalter</title>
+<meta name="description" content="Cognitex begleitet Bildungsanbieter durch das KI-Zeitalter: Beratung zu KI in Lehre und Prüfung sowie Entwicklung digitaler Prüf- und Bewertungslösungen.">
+<link rel="icon" type="image/png" href="assets/cognitex-logo-mark.png">
+<style>
+  /* Version-3 design (Hanken Grotesk + Inter, brand blue, eyebrows, pillar cards, numbered steps, column footer),
+     re-set on light grounds: white and a pale blue-grey; dark navy only as accent on single cards. */
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f3f7fd;
+    --bg-tint: #e9f1fe;
+    --navy: #0b2250;
+    --navy-deep: #071633;
+    --ink: #0e1a2f;
+    --ink-soft: #4a5570;
+    --blue: #185ceb;
+    --blue-bright: #1e6fff;
+    --blue-tint: #edf3ff;
+    --line: #e3e9f3;
+    --card: #ffffff;
+    --on-navy: #e9f0fc;
+    --on-navy-soft: #9db1d6;
+    --ok: #0f7b4b; --ok-tint: #e6f5ee; --err: #b42318; --err-tint: #fde8e8;
+    --font-display: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    --maxw: 1160px;
+    --r: 16px;
+    color-scheme: light;
+  }
+
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  img { max-width:100%; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.6; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3 { font-family:var(--font-display); text-wrap:balance; hyphens:auto; overflow-wrap:break-word; line-height:1.14; margin:0; letter-spacing:-0.015em; }
+  p { margin:0; }
+  a { color:inherit; }
+  em { font-style:normal; color:var(--blue); }
+  :focus-visible { outline:2px solid var(--blue); outline-offset:2px; border-radius:6px; }
+  .wrap { max-width:var(--maxw); margin-inline:auto; padding-left:max(22px, env(safe-area-inset-left,0px)); padding-right:max(22px, env(safe-area-inset-right,0px)); }
+
+  /* NAV (light) */
+  body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:60; background:var(--bg); }
+  .nav { position:sticky; top:env(safe-area-inset-top,0px); z-index:50; background:color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:66px; padding-block:10px; }
+  .brand { display:flex; align-items:center; gap:10px; text-decoration:none; cursor:pointer; }
+  .brand img { height:34px; width:auto; display:block; }
+  .brand-name { font-family:var(--font-display); font-weight:800; font-size:1.3rem; color:var(--ink); letter-spacing:-0.01em; }
+  .nav-links { display:flex; align-items:center; gap:2px; }
+  .nav-links a { color:var(--ink-soft); text-decoration:none; font-size:.92rem; font-weight:500; padding:8px 12px; border-radius:9px; transition:color .15s, background .15s; cursor:pointer; }
+  .nav-links a:hover { color:var(--ink); }
+  .nav-links a.active { color:var(--blue); background:var(--blue-tint); }
+  .nav-links a.nav-cta { background:var(--blue); color:#fff; margin-left:10px; font-weight:600; }
+  .nav-links a.nav-cta:hover { background:var(--blue-bright); }
+  .nav-toggle { display:none; background:none; border:0; color:var(--ink); cursor:pointer; padding:6px; }
+  @media (max-width:1000px) {
+    .nav-links { display:none; }
+    .nav-toggle { display:inline-flex; }
+    .nav-links.open { display:flex; flex-direction:column; align-items:stretch; gap:2px; position:absolute; left:0; right:0; top:100%; background:var(--bg); padding:12px max(22px,env(safe-area-inset-left,0px)) 18px; border-bottom:1px solid var(--line); box-shadow:0 12px 24px -16px rgba(14,26,47,.25); }
+    .nav-links.open a { padding:11px 12px; font-size:1rem; }
+    .nav-links a.nav-cta { margin-left:0; margin-top:6px; text-align:center; }
+  }
+
+  /* shared */
+  .page[hidden] { display:none !important; }
+  .band { padding-block:clamp(54px,8vw,88px); overflow-x:clip; }
+  .band.soft { background:var(--bg-soft); }
+  .eyebrow { display:inline-flex; align-items:center; gap:9px; font-size:.77rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--blue); }
+  .eyebrow::before { content:""; width:26px; height:1.5px; background:var(--blue); }
+  .section-head { max-width:680px; display:grid; gap:14px; margin-bottom:44px; }
+  .section-head h2 { font-size:clamp(1.8rem,4.2vw,2.5rem); font-weight:800; color:var(--ink); }
+  .section-head p { color:var(--ink-soft); font-size:1.05rem; }
+
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:13px 22px; border-radius:11px; font-weight:600; font-size:.98rem; text-decoration:none; cursor:pointer; border:0; font-family:inherit; transition:transform .12s, background .15s, border-color .15s; }
+  .btn:active { transform:translateY(1px); }
+  .btn-primary { background:var(--blue); color:#fff; }
+  .btn-primary:hover { background:var(--blue-bright); }
+  .btn-ghost { background:var(--card); color:var(--blue); border:1.5px solid var(--line); }
+  .btn-ghost:hover { border-color:var(--blue); }
+  .actions { display:flex; flex-wrap:wrap; gap:12px; }
+
+  /* heroes (light) */
+  .hero { background:radial-gradient(900px 480px at 88% -10%, rgba(24,92,235,.13), transparent 62%), radial-gradient(700px 420px at -5% 110%, rgba(24,92,235,.07), transparent 60%), var(--bg); border-bottom:1px solid var(--line); }
+  .hero-inner { padding-block:clamp(70px,11vw,118px); display:grid; gap:26px; max-width:820px; }
+  .hero h1 { font-size:clamp(2.3rem,6vw,3.8rem); font-weight:800; color:var(--ink); }
+  .hero-lede { font-size:clamp(1.05rem,2.5vw,1.25rem); color:var(--ink-soft); max-width:62ch; }
+  .phero { background:var(--bg-soft); border-bottom:1px solid var(--line); }
+  .phero-inner { padding-block:clamp(46px,7vw,74px); display:grid; gap:16px; max-width:760px; }
+  .phero h1 { font-size:clamp(2rem,5vw,2.9rem); font-weight:800; color:var(--ink); }
+  .phero p { font-size:clamp(1.02rem,2.3vw,1.18rem); color:var(--ink-soft); max-width:62ch; }
+
+  /* cards */
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media (max-width:880px){ .grid-3{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .grid-3{ grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:26px 24px; display:grid; gap:11px; align-content:start; }
+  .card .ic { width:44px; height:44px; border-radius:12px; background:var(--blue-tint); color:var(--blue); display:grid; place-items:center; }
+  .card h3 { font-size:1.14rem; font-weight:700; color:var(--ink); }
+  .card p { color:var(--ink-soft); font-size:.95rem; }
+  a.card { text-decoration:none; cursor:pointer; transition:border-color .15s, transform .15s; }
+  a.card:hover { border-color:var(--blue); transform:translateY(-2px); }
+  .card .go { margin-top:4px; font-weight:600; font-size:.92rem; color:var(--blue); }
+
+  /* conviction */
+  .inter-grid { display:grid; grid-template-columns:1.15fr 1fr; gap:48px; align-items:center; }
+  @media (max-width:880px){ .inter-grid{ grid-template-columns:1fr; gap:32px; } }
+  .inter-grid h2 { color:var(--ink); font-size:clamp(1.7rem,4vw,2.4rem); font-weight:800; margin:14px 0 16px; }
+  .inter-grid p { color:var(--ink-soft); font-size:1.05rem; }
+  .inter-grid p + p { margin-top:13px; }
+  .venn svg { width:100%; max-width:340px; height:auto; display:block; margin-inline:auto; }
+
+  /* pillars */
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:760px){ .split{ grid-template-columns:1fr; } }
+  .scard { border-radius:var(--r); padding:32px 30px; display:grid; gap:14px; align-content:start; border:1px solid var(--line); background:var(--card); text-decoration:none; color:inherit; transition:transform .15s, border-color .15s; }
+  a.scard:hover { transform:translateY(-2px); border-color:var(--blue); }
+  .scard.dark { background:linear-gradient(160deg,#eaf1ff 0%, #f5f8ff 100%); color:var(--ink); border-color:#cddcfb; }
+  .scard .tag { font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--blue); }
+  .scard.dark .tag { color:var(--blue); }
+  .scard h3 { font-size:1.5rem; font-weight:800; color:var(--ink); }
+  .scard.dark h3 { color:var(--ink); }
+  .scard p { color:var(--ink-soft); font-size:1rem; }
+  .scard.dark p { color:var(--ink-soft); }
+  .slist { list-style:none; margin:4px 0 0; padding:0; display:grid; gap:9px; }
+  .slist li { display:flex; gap:10px; align-items:flex-start; font-size:.95rem; }
+  .slist li::before { content:""; flex:none; width:7px; height:7px; border-radius:2px; margin-top:8px; background:var(--blue); }
+  .scard.dark .slist li::before { background:var(--blue); }
+  .more { margin-top:8px; font-weight:600; font-size:.95rem; text-decoration:none; color:var(--blue); display:inline-flex; gap:7px; cursor:pointer; width:fit-content; transition:gap .15s; }
+  .scard.dark .more { color:var(--blue); }
+  .more:hover { gap:11px; }
+
+  /* steps (real sequence) */
+  .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+  @media (max-width:880px){ .steps{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px){ .steps{ grid-template-columns:1fr; } }
+  .step { display:grid; gap:10px; align-content:start; }
+  .step .num { font-family:var(--font-display); font-weight:800; font-size:.95rem; color:#fff; background:var(--blue); width:38px; height:38px; border-radius:11px; display:grid; place-items:center; }
+  .step h3 { font-size:1.08rem; font-weight:700; color:var(--ink); }
+  .step p { font-size:.93rem; color:var(--ink-soft); }
+
+  /* reference */
+  .ref-head { display:grid; grid-template-columns:1fr 1.15fr; gap:44px; align-items:end; margin-bottom:36px; }
+  @media (max-width:860px){ .ref-head{ grid-template-columns:1fr; gap:18px; } }
+  .ref-head h2 { font-size:clamp(1.6rem,3.6vw,2.2rem); font-weight:800; color:var(--ink); margin-top:14px; }
+  .ref-head p { color:var(--ink-soft); font-size:1.02rem; }
+  .ref-head p + p { margin-top:12px; }
+  .shot { margin:0; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:clamp(10px,2vw,20px); box-shadow:0 30px 60px -36px rgba(7,22,51,.35); }
+  .shot img { display:block; width:100%; max-width:100%; height:auto; border-radius:10px; }
+  .shot figcaption { margin-top:12px; text-align:center; font-size:.88rem; color:var(--ink-soft); }
+  .feat { list-style:none; margin:0 0 32px; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:14px 20px; }
+  @media (max-width:880px){ .feat{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px){ .feat{ grid-template-columns:1fr; } }
+  .feat li { display:grid; gap:2px; font-size:.92rem; color:var(--ink-soft); border-left:3px solid var(--blue); padding-left:12px; }
+  .feat b { color:var(--ink); font-weight:600; font-size:.98rem; }
+
+  /* about */
+  .about-grid { display:grid; grid-template-columns:1.7fr 1fr; gap:48px; align-items:start; }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; gap:30px; } }
+  .about-body p { color:var(--ink-soft); font-size:1.05rem; }
+  .about-body p + p { margin-top:16px; }
+  .founder { margin:0; justify-self:center; width:100%; max-width:300px; background:var(--card); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; }
+  .founder img { width:100%; max-width:100%; height:auto; aspect-ratio:1/1; object-fit:cover; display:block; }
+  .founder figcaption { padding:16px 20px 20px; display:grid; gap:3px; }
+  .founder .fn { font-weight:700; color:var(--ink); font-size:1.05rem; }
+  .founder .fr { font-size:.88rem; color:var(--ink-soft); }
+  .quote { margin:0; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--blue); border-radius:var(--r); padding:34px 32px; font-family:var(--font-display); font-size:clamp(1.15rem,2.6vw,1.45rem); font-weight:500; line-height:1.42; color:var(--ink); }
+  .quote .qa { display:block; margin-top:16px; font-family:var(--font-body); font-size:.92rem; color:var(--ink-soft); font-weight:500; }
+
+  /* contact */
+  .contact-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:40px; align-items:start; }
+  @media (max-width:860px){ .contact-grid{ grid-template-columns:1fr; gap:28px; } }
+  .contact-side { display:grid; gap:18px; align-content:start; }
+  .book { background:linear-gradient(160deg,#eaf1ff 0%, #f5f8ff 100%); border:1px solid #cddcfb; color:var(--ink); border-radius:var(--r); padding:28px 26px; display:grid; gap:12px; }
+  .book h2 { font-size:1.35rem; font-weight:800; color:var(--ink); }
+  .book p { color:var(--ink-soft); font-size:.97rem; }
+  .book .btn { margin-top:6px; width:fit-content; }
+  .mailbox { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:24px; display:grid; gap:12px; }
+  .mailbox h2 { font-size:1.15rem; font-weight:700; color:var(--ink); }
+  .mailbox p { color:var(--ink-soft); font-size:.94rem; }
+  .mailrow { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+  .mailaddr { font-weight:600; color:var(--ink); font-size:1.05rem; text-decoration:none; user-select:all; }
+  .copy-btn { font:inherit; font-size:.85rem; font-weight:600; color:var(--blue); background:var(--blue-tint); border:0; border-radius:8px; padding:6px 11px; cursor:pointer; }
+  .loc { display:flex; gap:10px; align-items:center; color:var(--ink-soft); font-size:.93rem; padding-left:4px; }
+  form.cf { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:28px 26px; display:grid; gap:16px; }
+  form.cf h2 { font-size:1.2rem; font-weight:700; color:var(--ink); }
+  .field { display:grid; gap:6px; }
+  .field label { font-size:.85rem; font-weight:600; color:var(--ink); }
+  .field input, .field textarea, .field select { font:inherit; color:var(--ink); background:var(--bg); border:1.5px solid var(--line); border-radius:10px; padding:11px 13px; width:100%; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline:2px solid var(--blue); outline-offset:1px; border-color:var(--blue); }
+  .field textarea { resize:vertical; min-height:120px; }
+  .cf .note { font-size:.82rem; color:var(--ink-soft); }
+  .cf-msg { border-radius:10px; padding:12px 14px; font-size:.92rem; font-weight:600; }
+  .cf-msg.ok { background:var(--ok-tint); color:var(--ok); }
+  .cf-msg.err { background:var(--err-tint); color:var(--err); }
+
+  /* CTA band (light) */
+  .cta { background:linear-gradient(135deg, var(--bg-tint) 0%, var(--bg-soft) 100%); border-top:1px solid var(--line); }
+  .cta-inner { padding-block:clamp(52px,8vw,78px); display:grid; gap:18px; max-width:680px; }
+  .cta h2 { color:var(--ink); font-size:clamp(1.8rem,4vw,2.4rem); font-weight:800; }
+  .cta p { color:var(--ink-soft); font-size:1.05rem; }
+  .cta .mail-line { font-size:.93rem; }
+  .cta .mail-line b { color:var(--ink); font-weight:600; user-select:all; }
+
+  /* legal */
+  .legal { max-width:760px; display:grid; gap:28px; }
+  .legal section { display:grid; gap:6px; min-width:0; }
+  .legal h2 { font-size:1.2rem; font-weight:700; overflow-wrap:anywhere; }
+  .legal p { color:var(--ink-soft); }
+  .legal a { color:var(--blue); }
+  .legal .src { font-size:.9rem; }
+
+  /* footer (light) */
+  footer { background:var(--bg-soft); color:var(--ink-soft); border-top:1px solid var(--line); }
+  .foot-inner { padding-block:42px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:28px; align-items:flex-start; }
+  .foot-brand { display:grid; gap:12px; max-width:300px; }
+  .foot-brand p { font-size:.9rem; }
+  .foot-cols { display:flex; flex-wrap:wrap; gap:40px; }
+  .foot-col { display:grid; gap:9px; align-content:start; }
+  .foot-col h4 { font-family:var(--font-display); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); font-weight:700; margin:0; }
+  .foot-col a { color:var(--ink-soft); text-decoration:none; font-size:.9rem; cursor:pointer; }
+  .foot-col a:hover { color:var(--blue); }
+  .foot-bottom { border-top:1px solid var(--line); padding-block:18px; font-size:.84rem; display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between; }
+  .foot-bottom nav { display:flex; gap:18px; }
+  .foot-bottom a { color:var(--ink-soft); text-decoration:none; cursor:pointer; }
+  .foot-bottom a:hover { color:var(--blue); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" data-go="start" href="#start" aria-label="Cognitex – zur Startseite">
+      <img src="assets/cognitex-logo-mark.png" alt="" width="28" height="34">
+      <span class="brand-name">Cognitex</span>
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a data-go="leistungen" href="#leistungen">Leistungen</a>
+      <a data-go="beratung" href="#beratung">Beratung</a>
+      <a data-go="entwicklung" href="#entwicklung">Entwicklung</a>
+      <a data-go="ueber-uns" href="#ueber-uns">Über uns</a>
+      <a data-go="kontakt" href="#kontakt">Kontakt</a>
+      <a class="nav-cta" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a>
+    </div>
+    <button class="nav-toggle" id="navtoggle" aria-label="Menü öffnen" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="main" lang="de">
+
+<!-- ========================= START ========================= -->
+<div class="page" id="page-start">
+  <header class="hero">
+    <div class="wrap hero-inner">
+      <h1>Wir begleiten Bildungsanbieter durch das <em>KI-Zeitalter.</em></h1>
+      <p class="hero-lede">Wir beraten zu den Möglichkeiten Künstlicher Intelligenz, finden gemeinsam Lösungen für aktuelle Herausforderungen und unterstützen bei der Digitalisierung von Prüf- und Bewertungsprozessen.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin vereinbaren</a>
+        <a class="btn btn-ghost" data-go="leistungen" href="#leistungen">Leistungen ansehen</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Der Wandel</span>
+        <h2>KI verändert, was Prüfen und Bewerten bedeuten.</h2>
+        <p>Aufsätze, Hausarbeiten und andere schriftliche Aufgaben lassen sich heute in Sekunden mit KI erstellen. Viele bewährte Prüfungsformate verlieren dadurch an Aussagekraft. Die Frage ist nicht mehr, ob KI in der Bildung ankommt, sondern wie Lernen unter diesen Bedingungen fair und verlässlich überprüft werden kann.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Was prüfen wir noch, wenn KI die Aufgaben löst?</h3>
+          <p>Viele Formate zeigen heute eher, wie gut jemand mit KI umgehen kann, als was er selbst gelernt hat. Wir entwickeln mit Ihnen Prüfungsformate, die die tatsächlichen Kompetenzen der Lernenden wieder sichtbar machen.</p>
+        </div>
+        <div class="card">
+          <h3>Wie gehen wir mit KI im Lernalltag um?</h3>
+          <p>Zwischen pauschalem Verbot und Laissez-faire fehlt oft eine klare, gemeinsame Linie. Wir erarbeiten mit Ihnen tragfähige und nachhaltige Prozesse und Leitlinien, die zu Ihrer Einrichtung passen.</p>
+        </div>
+        <div class="card">
+          <h3>Welche Formate sind noch aussagekräftig?</h3>
+          <p>Bewährte Methoden stoßen an ihre Grenzen, neue sind oft noch nicht erprobt. Gemeinsam gestalten wir neue Methoden und Strukturen der Überprüfung, die auch im KI-Zeitalter Bestand haben.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band soft">
+    <div class="wrap inter-grid">
+      <div>
+        <span class="eyebrow">Unsere Überzeugung</span>
+        <h2>Überprüfung neu denken.</h2>
+        <p>Wir sind überzeugt, dass Lernen und Lehren im KI-Zeitalter neu gedacht werden müssen. Nicht gegen die Technologie, sondern mit ihr, damit Lernerfolge weiterhin fair und verlässlich sichtbar werden.</p>
+        <p>Dafür verbinden wir Erfahrung aus der Lehre mit technischem Know-how. Wir übersetzen didaktische Anforderungen in digitale Lösungen, die Lehrende in ihrer Arbeit unterstützen.</p>
+      </div>
+      <div class="venn">
+        <svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognitex in der Schnittmenge von Didaktik und Technologie">
+          <circle cx="135" cy="130" r="98" fill="#2563eb" fill-opacity="0.72"/>
+          <circle cx="225" cy="130" r="98" fill="#8b5cf6" fill-opacity="0.66"/>
+          <text x="88" y="136" text-anchor="middle" fill="#ffffff" font-family="Hanken Grotesk, sans-serif" font-weight="700" font-size="16">Didaktik</text>
+          <text x="273" y="128" text-anchor="middle" fill="#ffffff" font-family="Hanken Grotesk, sans-serif" font-weight="700" font-size="15">Techno-</text>
+          <text x="273" y="147" text-anchor="middle" fill="#ffffff" font-family="Hanken Grotesk, sans-serif" font-weight="700" font-size="15">logie</text>
+          <text x="180" y="135" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-weight="600" font-size="13">Cognitex</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Was wir tun</span>
+        <h2>Wie wir unterstützen</h2>
+        <p>Je nachdem, wo Sie stehen, begleiten wir Sie mit Beratung oder setzen neue Prüf- und Bewertungsformate gemeinsam mit Ihnen technisch um.</p>
+      </div>
+      <div class="split">
+        <a class="scard dark" data-go="beratung" href="#beratung">
+          <span class="tag">Beratung</span>
+          <h3>Wir beraten</h3>
+          <p>Wir helfen Ihnen, Möglichkeiten und Grenzen von KI einzuordnen, und entwickeln mit Ihnen einen Weg, der zu Ihrer Einrichtung passt.</p>
+          <ul class="slist"><li>Strategische Beratung zu KI in Lehre und Prüfung</li><li>Workshops und Fortbildungen</li><li>Keynotes und Lehrveranstaltungen</li></ul>
+          <span class="more">Zur Beratung →</span>
+        </a>
+        <a class="scard" data-go="entwicklung" href="#entwicklung">
+          <span class="tag">Entwicklung</span>
+          <h3>Wir entwickeln</h3>
+          <p>Wir setzen neue Prüf- und Bewertungsformate technisch um, von der ersten Idee bis zum laufenden Betrieb.</p>
+          <ul class="slist"><li>Digitale Prüf- und Bewertungslösungen</li><li>KI-gestützte, interaktive Prüfungsformate</li><li>Begleitung vom Pilotprojekt bis in den Betrieb</li></ul>
+          <span class="more">Zur Entwicklung →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band soft">
+    <div class="wrap">
+      <div class="ref-head">
+        <div><span class="eyebrow">Referenzen</span><h2>Cognitex Prüfungssimulation</h2></div>
+        <div>
+          <p>In einem Pilotprojekt haben wir gemeinsam mit Sprachschulen eine App zur Vorbereitung auf die telc-Sprachprüfungen realisiert. Sie simuliert alle vier Prüfungsteile: Lesen, Hören, Schreiben und Sprechen. Die Plattform ist aktuell im Einsatz und wird laufend weiterentwickelt.</p>
+          <a class="more" data-go="entwicklung" href="#entwicklung" style="margin-top:14px">Mehr zur Prüfungssimulation →</a>
+        </div>
+      </div>
+      <figure class="shot">
+        <img src="assets/pruefungssimulation.jpg" alt="Cognitex Prüfungssimulation: Ansicht für Lernende mit Prüfungsbereitschaft und Kompetenzen, daneben die Kursübersicht für Lehrkräfte" width="1298" height="428" loading="lazy">
+        <figcaption>Links die Ansicht für Lernende, rechts die Kursübersicht für Lehrkräfte</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Zusammenarbeit</span><h2>So beginnt die Zusammenarbeit</h2><p>Am Anfang steht ein Gespräch über Ihre Situation und die Fragen, die Sie gerade beschäftigen.</p></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Erstgespräch</h3><p>Wir lernen Ihre Einrichtung, Ihre Ziele und Ihre aktuellen Fragen kennen.</p></div>
+        <div class="step"><div class="num">2</div><h3>Bestandsaufnahme</h3><p>Gemeinsam schauen wir, wo KI Ihre Prüf- und Bewertungsprozesse heute schon berührt.</p></div>
+        <div class="step"><div class="num">3</div><h3>Empfehlung</h3><p>Sie erhalten eine klare Einschätzung und konkrete nächste Schritte.</p></div>
+        <div class="step"><div class="num">4</div><h3>Umsetzung</h3><p>Auf Wunsch begleiten wir die Umsetzung, von der Beratung bis zur fertigen Lösung.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>Sprechen wir über Ihre Fragen.</h2>
+      <p>Buchen Sie direkt einen Termin oder schreiben Sie uns eine E-Mail. Wir melden uns umgehend bei Ihnen.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a>
+        <a class="btn btn-ghost" data-go="kontakt" href="#kontakt">E-Mail schreiben</a>
+      </div>
+      <p class="mail-line">Oder direkt an <b>kontakt@cognitex.de</b></p>
+    </div>
+  </section>
+</div>
+
+<!-- ========================= LEISTUNGEN ========================= -->
+<div class="page" id="page-leistungen" hidden>
+  <header class="phero"><div class="wrap phero-inner">
+    <span class="eyebrow">Leistungen</span>
+    <h1>Wie wir Bildungsanbieter unterstützen</h1>
+    <p>Von der strategischen Beratung über Workshops und Vorträge bis zur Entwicklung digitaler Prüf- und Bewertungslösungen.</p>
+  </div></header>
+  <section class="band">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:22px">
+        <a class="scard dark" data-go="beratung" href="#beratung">
+          <span class="tag">Beratung</span>
+          <h3>Strategische Beratung</h3>
+          <p>Wir ordnen mit Ihnen Möglichkeiten und Grenzen von KI in Lehre und Prüfung ein und entwickeln einen passenden Weg für Ihre Einrichtung.</p>
+          <span class="more">Zur Beratung →</span>
+        </a>
+        <a class="scard" data-go="entwicklung" href="#entwicklung">
+          <span class="tag">Entwicklung</span>
+          <h3>Digitale Prüf- und Bewertungslösungen</h3>
+          <p>Wir konzipieren und entwickeln digitale Lösungen für Prüfung und Bewertung, wie unsere eigene Prüfungssimulation.</p>
+          <span class="more">Zur Entwicklung →</span>
+        </a>
+      </div>
+      <div class="grid-3"><a class="card" data-go="beratung" href="#beratung"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg></div><h3>Workshops</h3><p>Praxisnahe Fortbildungen für Teams und Kollegien: KI verstehen, ausprobieren und auf den eigenen Unterricht übertragen.</p><span class="go">Mehr erfahren →</span></a><a class="card" data-go="beratung" href="#beratung"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg></div><h3>Keynotes</h3><p>Vorträge zu Bildung und Prüfung im KI-Zeitalter, für Konferenzen, Tagungen und interne Veranstaltungen.</p><span class="go">Mehr erfahren →</span></a><a class="card" data-go="beratung" href="#beratung"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg></div><h3>Lehrveranstaltungen</h3><p>Lehraufträge an Hochschulen und Akademien zu Digitalisierung und KI.</p><span class="go">Mehr erfahren →</span></a></div>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>Sprechen wir über Ihre Fragen.</h2>
+      <p>Buchen Sie direkt einen Termin oder schreiben Sie uns eine E-Mail. Wir melden uns umgehend bei Ihnen.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a>
+        <a class="btn btn-ghost" data-go="kontakt" href="#kontakt">E-Mail schreiben</a>
+      </div>
+      <p class="mail-line">Oder direkt an <b>kontakt@cognitex.de</b></p>
+    </div>
+  </section>
+</div>
+
+<!-- ========================= BERATUNG ========================= -->
+<div class="page" id="page-beratung" hidden>
+  <header class="phero"><div class="wrap phero-inner">
+    <span class="eyebrow">Beratung</span>
+    <h1>Orientierung für Bildung im KI-Zeitalter</h1>
+    <p>Wir helfen Bildungsanbietern, Möglichkeiten und Grenzen von KI einzuordnen, und erarbeiten gemeinsam einen Weg, der zur eigenen Einrichtung passt.</p>
+  </div></header>
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Themen</span><h2>Woran wir gemeinsam arbeiten</h2></div>
+      <div class="grid-3">
+        <div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></div><h3>KI-Strategie für Lehre und Prüfung</h3><p>Wo kann KI Ihre Einrichtung sinnvoll unterstützen und wo nicht? Wir schaffen einen Überblick und setzen gemeinsam Prioritäten.</p></div>
+        <div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></div><h3>Prüfungsformate weiterentwickeln</h3><p>Wir analysieren Ihre bestehenden Prüf- und Bewertungsformate und entwickeln Alternativen, die auch mit KI aussagekräftig bleiben.</p></div>
+        <div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><h3>Prozesse und Leitlinien</h3><p>Wir erarbeiten mit Ihnen klare Regeln und Abläufe für den Umgang mit KI, die im Alltag funktionieren und nachhaltig tragen.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="band soft">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Formate</span><h2>Wissen weitergeben</h2><p>Für Teams, Kollegien, Veranstaltungen und Hörsäle, abgestimmt auf Ihre Zielgruppe.</p></div>
+      <div class="grid-3"><div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg></div><h3>Workshops</h3><p>Praxisnahe Fortbildungen für Teams und Kollegien: KI verstehen, ausprobieren und auf den eigenen Unterricht übertragen.</p></div><div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg></div><h3>Keynotes</h3><p>Vorträge zu Bildung und Prüfung im KI-Zeitalter, für Konferenzen, Tagungen und interne Veranstaltungen.</p></div><div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg></div><h3>Lehrveranstaltungen</h3><p>Lehraufträge an Hochschulen und Akademien zu Digitalisierung und KI.</p></div></div>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Ablauf</span><h2>So gehen wir vor</h2></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Verstehen</h3><p>Wir lernen Ihre Ausgangslage, Ihre Ziele und Ihre bestehenden Formate kennen.</p></div>
+        <div class="step"><div class="num">2</div><h3>Einordnen</h3><p>Wir zeigen, wo KI Chancen bietet und wo Handlungsbedarf besteht.</p></div>
+        <div class="step"><div class="num">3</div><h3>Erarbeiten</h3><p>Gemeinsam entwickeln wir Lösungen, Leitlinien oder neue Formate.</p></div>
+        <div class="step"><div class="num">4</div><h3>Verankern</h3><p>Wir begleiten die Einführung, damit das Neue im Alltag funktioniert.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>Sprechen wir über Ihre Fragen.</h2>
+      <p>Buchen Sie direkt einen Termin oder schreiben Sie uns eine E-Mail. Wir melden uns umgehend bei Ihnen.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a>
+        <a class="btn btn-ghost" data-go="kontakt" href="#kontakt">E-Mail schreiben</a>
+      </div>
+      <p class="mail-line">Oder direkt an <b>kontakt@cognitex.de</b></p>
+    </div>
+  </section>
+</div>
+
+<!-- ========================= ENTWICKLUNG ========================= -->
+<div class="page" id="page-entwicklung" hidden>
+  <header class="phero"><div class="wrap phero-inner">
+    <span class="eyebrow">Entwicklung</span>
+    <h1>Digitale Prüf- und Bewertungslösungen</h1>
+    <p>Wir setzen neue Formate der Überprüfung technisch um. Didaktische Anforderungen stehen dabei am Anfang, die Technik folgt ihnen.</p>
+  </div></header>
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Leistungen</span><h2>Von der Idee bis zum Betrieb</h2></div>
+      <div class="grid-3">
+        <div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a5 5 0 0 1 5 5c0 2-1 3-1 5H8c0-2-1-3-1-5a5 5 0 0 1 5-5Z"/><path d="M9 17h6M10 20h4"/></svg></div><h3>Konzeption</h3><p>Wir übersetzen Ihre didaktischen Anforderungen und Bewertungskriterien in ein umsetzbares Konzept.</p></div>
+        <div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div><h3>Entwicklung</h3><p>Wir bauen digitale Prüf- und Bewertungslösungen, von KI-gestützter Auswertung bis zu interaktiven Prüfungsformaten.</p></div>
+        <div class="card"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Einführung und Betrieb</h3><p>Wir begleiten Pilotphase, Einführung und Weiterentwicklung, mit menschlicher Qualitätssicherung und Blick auf den Datenschutz.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="band soft">
+    <div class="wrap">
+      <div class="ref-head">
+        <div><span class="eyebrow">Referenz</span><h2>Cognitex Prüfungssimulation</h2></div>
+        <div>
+          <p>In einem Pilotprojekt haben wir gemeinsam mit Sprachschulen eine App zur Vorbereitung auf die telc-Sprachprüfungen realisiert. Die App bietet realistische Simulationen aller vier Prüfungsteile: Lesen, Hören, Schreiben und Sprechen. Lernende können sich damit gezielt und datengestützt auf ihre Sprachprüfung vorbereiten.</p>
+          <p>Sprachschulen gewinnen einen zusätzlichen digitalen, skalierbaren Umsatzkanal und entlasten ihr Lehrpersonal. Die Plattform ist aktuell im Einsatz und wird laufend weiterentwickelt.</p>
+        </div>
+      </div>
+      <ul class="feat">
+        <li><b>Alle vier Prüfungsteile</b>Lesen, Hören, Schreiben und Sprechen</li>
+        <li><b>Mündliche Prüfung mit KI</b>Ein KI-Prüfer führt durch den Sprechteil</li>
+        <li><b>Feedback in Sekunden</b>Ausführliche Rückmeldung zu eigenen Texten</li>
+        <li><b>Übersicht für Lehrkräfte</b>Lernstand und Prüfungsreife jedes Kursteilnehmers</li>
+      </ul>
+      <figure class="shot">
+        <img src="assets/pruefungssimulation.jpg" alt="Cognitex Prüfungssimulation: Ansicht für Lernende mit Prüfungsbereitschaft und Kompetenzen, daneben die Kursübersicht für Lehrkräfte" width="1298" height="428" loading="lazy">
+        <figcaption>Links die Ansicht für Lernende, rechts die Kursübersicht für Lehrkräfte</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Ablauf</span><h2>So entsteht eine Lösung</h2></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Anforderungen</h3><p>Wir klären Ziele, Zielgruppe, Bewertungskriterien und Rahmenbedingungen.</p></div>
+        <div class="step"><div class="num">2</div><h3>Konzept</h3><p>Didaktik und Technik werden zusammen gedacht und in einem Konzept festgehalten.</p></div>
+        <div class="step"><div class="num">3</div><h3>Pilot</h3><p>Ein erster Einsatz mit echten Lernenden zeigt, was funktioniert und was nicht.</p></div>
+        <div class="step"><div class="num">4</div><h3>Betrieb</h3><p>Wir führen die Lösung ein, betreuen sie und entwickeln sie weiter.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>Sprechen wir über Ihre Fragen.</h2>
+      <p>Buchen Sie direkt einen Termin oder schreiben Sie uns eine E-Mail. Wir melden uns umgehend bei Ihnen.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a>
+        <a class="btn btn-ghost" data-go="kontakt" href="#kontakt">E-Mail schreiben</a>
+      </div>
+      <p class="mail-line">Oder direkt an <b>kontakt@cognitex.de</b></p>
+    </div>
+  </section>
+</div>
+
+<!-- ========================= ÜBER UNS ========================= -->
+<div class="page" id="page-ueber-uns" hidden>
+  <header class="phero"><div class="wrap phero-inner">
+    <span class="eyebrow">Über uns</span>
+    <h1>Ein Team aus Digitalisierungsexperten, Lehrkräften und Entwicklern</h1>
+    <p>Wir verbinden Erfahrung aus der Lehre mit technischem Know-how.</p>
+  </div></header>
+  <section class="band">
+    <div class="wrap about-grid">
+      <div class="about-body">
+        <p>Simon Rösgen ist Gründer von Cognitex. Als ehemalige Lehrkraft für Deutsch als Fremdsprache, unter anderem an der DeutschAkademie und bei inlingua, kennt er Lehre und Prüfung aus erster Hand.</p>
+        <p>Nach einem MBA an der WHU – Otto Beisheim School of Management verbindet er diese Erfahrung mit einer unternehmerischen und digitalen Perspektive. So ist Cognitex entstanden: zunächst mit einer eigenen Plattform zur Vorbereitung auf Sprachprüfungen, heute als Partner für Bildungsanbieter, die Prüfen und Bewerten im KI-Zeitalter weiterentwickeln wollen.</p>
+        <p>Hinter Cognitex steht ein Team aus Digitalisierungsexperten, Lehrkräften und Entwicklern. Uns verbindet die Überzeugung, dass Didaktik und Technologie zusammengehören.</p>
+      </div>
+      <figure class="founder">
+        <img src="assets/simon-roesgen.jpg" alt="Simon Rösgen, Gründer von Cognitex" width="640" height="640">
+        <figcaption><span class="fn">Simon Rösgen, MBA</span><span class="fr">Gründer · ehem. Lehrkraft für Deutsch als Fremdsprache</span></figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="band soft">
+    <div class="wrap">
+      <blockquote class="quote">
+        „KI stellt viele bewährte Formen der Überprüfung infrage. Ich möchte Bildungsanbietern helfen, neue Wege zu finden, damit Lernerfolge auch künftig fair und verlässlich sichtbar werden."
+        <span class="qa">Simon Rösgen, MBA · Gründer von Cognitex</span>
+      </blockquote>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>Sprechen wir über Ihre Fragen.</h2>
+      <p>Buchen Sie direkt einen Termin oder schreiben Sie uns eine E-Mail. Wir melden uns umgehend bei Ihnen.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a>
+        <a class="btn btn-ghost" data-go="kontakt" href="#kontakt">E-Mail schreiben</a>
+      </div>
+      <p class="mail-line">Oder direkt an <b>kontakt@cognitex.de</b></p>
+    </div>
+  </section>
+</div>
+
+<!-- ========================= KONTAKT ========================= -->
+<div class="page" id="page-kontakt" hidden>
+  <header class="phero"><div class="wrap phero-inner">
+    <span class="eyebrow">Kontakt</span>
+    <h1>Wir freuen uns auf Ihre Nachricht</h1>
+    <p>Buchen Sie direkt einen Termin oder schreiben Sie uns. Wir melden uns umgehend bei Ihnen.</p>
+  </div></header>
+  <section class="band">
+    <div class="wrap contact-grid">
+      <div class="contact-side">
+        <div class="book">
+          <h2>Termin buchen</h2>
+          <p>Wählen Sie im Kalender einen passenden Termin für ein Gespräch per Video oder Telefon.</p>
+          <a class="btn btn-primary" href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Zum Kalender</a>
+        </div>
+        <div class="mailbox">
+          <h2>E-Mail</h2>
+          <p>Sie schreiben lieber direkt? Dann erreichen Sie uns hier:</p>
+          <div class="mailrow"><a class="mailaddr" href="mailto:kontakt@cognitex.de">kontakt@cognitex.de</a><button class="copy-btn" type="button" id="copymail">Adresse kopieren</button></div>
+        </div>
+        <div class="loc"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Cognitex GmbH · Frankfurt am Main</div>
+      </div>
+      <form class="cf" id="contactform" novalidate>
+        <h2>Nachricht senden</h2>
+        <div class="field"><label for="cf-name">Name</label><input id="cf-name" name="name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="cf-org">Einrichtung</label><input id="cf-org" name="org" type="text" autocomplete="organization"></div>
+        <div class="field"><label for="cf-email">E-Mail</label><input id="cf-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="cf-topic">Worum geht es?</label>
+          <select id="cf-topic" name="topic">
+            <option>Beratung zu KI in Lehre und Prüfung</option>
+            <option>Entwicklung einer Prüf- oder Bewertungslösung</option>
+            <option>Cognitex Prüfungssimulation</option>
+            <option>Workshop oder Fortbildung</option>
+            <option>Keynote oder Vortrag</option>
+            <option>Lehrveranstaltung</option>
+            <option>Etwas anderes</option>
+          </select>
+        </div>
+        <div class="field"><label for="cf-msg">Nachricht</label><textarea id="cf-msg" name="msg" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Nachricht senden</button>
+        <p class="note">Ihre Angaben verwenden wir ausschließlich zur Bearbeitung Ihrer Anfrage. Prototyp: Das Formular versendet noch keine Nachrichten.</p>
+        <div class="cf-msg" id="cf-msg-out" hidden></div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- ========================= IMPRESSUM ========================= -->
+<div class="page" id="page-impressum" hidden>
+  <header class="phero"><div class="wrap phero-inner"><h1>Impressum</h1></div></header>
+  <section class="band">
+    <div class="wrap legal">
+      <section><h2>Angaben gemäß § 5 TMG</h2><p>Cognitex GmbH<br>Thurn-und-Taxis-Platz 6<br>60313 Frankfurt am Main</p></section>
+      <section><h2>Handelsregister</h2><p>HRB 143507<br>Registergericht: Amtsgericht Frankfurt am Main</p></section>
+      <section><h2>Vertreten durch</h2><p>Simon Rösgen, MBA</p></section>
+      <section><h2>Kontakt</h2><p>E-Mail: <a href="mailto:kontakt@cognitex.de">kontakt@cognitex.de</a></p></section>
+      <section><h2>Umsatzsteuer-ID</h2><p>01424273062</p></section>
+      <section><h2>Verbraucherstreitbeilegung/Universalschlichtungsstelle</h2><p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p></section>
+      <section><p class="src">Quelle: <a href="https://www.e-recht24.de/impressum-generator.html" target="_blank" rel="noopener">https://www.e-recht24.de/impressum-generator.html</a></p></section>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" data-go="start" href="#start"><img src="assets/cognitex-logo-mark.png" alt="" width="28" height="34"><span class="brand-name">Cognitex</span></a>
+        <p>Wir begleiten Bildungsanbieter durch das KI-Zeitalter.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Leistungen</h4><a data-go="beratung" href="#beratung">Beratung</a><a data-go="entwicklung" href="#entwicklung">Entwicklung</a><a data-go="leistungen" href="#leistungen">Workshops &amp; Keynotes</a></div>
+        <div class="foot-col"><h4>Cognitex</h4><a data-go="ueber-uns" href="#ueber-uns">Über uns</a><a data-go="entwicklung" href="#entwicklung">Prüfungssimulation</a></div>
+        <div class="foot-col"><h4>Kontakt</h4><a href="https://meetings-eu1.hubspot.com/simon-roesgen" target="_blank" rel="noopener">Termin buchen</a><a data-go="kontakt" href="#kontakt">kontakt@cognitex.de</a><a data-go="kontakt" href="#kontakt">Frankfurt am Main</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Cognitex GmbH · Frankfurt am Main</span>
+      <nav><a data-go="impressum" href="#impressum">Impressum</a><a href="https://cognitex.de/datenschutz" target="_blank" rel="noopener">Datenschutz</a></nav>
+    </div>
+  </div>
+</footer>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<script>
+  (function () {
+    var PAGES = ['start','leistungen','beratung','entwicklung','ueber-uns','kontakt','impressum'];
+    var links = document.getElementById('navlinks');
+    var toggle = document.getElementById('navtoggle');
+    function show(name) {
+      if (PAGES.indexOf(name) === -1) name = 'start';
+      PAGES.forEach(function (p) { var el = document.getElementById('page-' + p); if (el) el.hidden = (p !== name); });
+      document.querySelectorAll('#navlinks a[data-go]').forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-go') === name); });
+      window.scrollTo(0, 0);
+    }
+    function current() { return (location.hash || '#start').replace(/^#/, ''); }
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-go]');
+      if (!t) return;
+      e.preventDefault();
+      if (links) links.classList.remove('open');
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      var name = t.getAttribute('data-go');
+      if (current() === name) show(name); else location.hash = name;
+    });
+    window.addEventListener('hashchange', function () { show(current()); });
+    if (toggle && links) toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    var copy = document.getElementById('copymail');
+    if (copy) copy.addEventListener('click', function () {
+      function done() { copy.textContent = 'Kopiert'; setTimeout(function(){ copy.textContent = 'Adresse kopieren'; }, 1800); }
+      function fallback() { var el = document.querySelector('.mailaddr'); var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); copy.textContent = 'Markiert, jetzt kopieren'; }
+      try { navigator.clipboard.writeText('kontakt@cognitex.de').then(done, fallback); } catch (err) { fallback(); }
+    });
+    var form = document.getElementById('contactform');
+    if (form) form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var out = document.getElementById('cf-msg-out');
+      var name = document.getElementById('cf-name').value.trim();
+      var email = document.getElementById('cf-email').value.trim();
+      var msg = document.getElementById('cf-msg').value.trim();
+      out.hidden = false;
+      if (!name || !email || !msg) { out.className = 'cf-msg err'; out.textContent = 'Bitte füllen Sie Name, E-Mail und Nachricht aus.'; return; }
+      out.className = 'cf-msg ok';
+      out.textContent = 'Danke, ' + name + '. In der Live-Version ginge Ihre Nachricht jetzt an kontakt@cognitex.de.';
+      form.reset();
+    });
+    show(current());
+  })();
+</script>
+</body>
+</html>
